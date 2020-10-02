@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
+using MonoMod.Cil;
+using Mono.Cecil.Cil;
+
 using R2API;
 using RoR2;
 using UnityEngine;
@@ -39,12 +42,16 @@ namespace MoreItems
             buffIndex = BuffAPI.Add(new CustomBuff(buffDef));
         }
 
+
         void hook_CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory)
             {
-                self.crit += self.inventory.GetItemCount(this.ItemIndex) > 0 ? 5f : 0 ;
+                if(self.inventory.GetItemCount(this.ItemIndex) > 0)
+                {
+                    self.crit += 5;
+                }
             }
         }
         void hook_HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)

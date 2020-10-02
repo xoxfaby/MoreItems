@@ -13,7 +13,6 @@ namespace MoreItems
     {
         internal SerratedKnife()
         {
-
             On.RoR2.HealthComponent.TakeDamage += hook_HealthComponent_TakeDamage;
 
             var itemTemplate = new ItemTemplate();

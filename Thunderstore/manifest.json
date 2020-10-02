@@ -1,8 +1,8 @@
 ﻿{
   "name": "MoreItems",
-  "version_number": "1.0.0",
+  "version_number": "1.1.0",
   "website_url": "https://github.com/xoxfaby/MoreItems",
-  "description": "Extra items intended to fit into the style and balanced of the vanilla gameplay.",
+  "description": "Extra items intended to fit into the style and balance of the vanilla gameplay.",
   "dependencies": [
     "bbepis-BepInExPack-5.3.1",
     "tristanmcpherson-R2API-2.5.14"
