@@ -29,7 +29,7 @@ namespace MoreItems
             itemTemplate.tier = ItemTier.Lunar;
             itemTemplate.internalName = "SERRATED_SPOON";
             itemTemplate.pickupText = "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.";
-            itemTemplate.descriptionText = "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>20%</style> <style=cStack>(+20% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>";
+            itemTemplate.descriptionText = "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>";
             itemTemplate.loreText = "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see...";
 
             Init(itemTemplate);
@@ -48,7 +48,7 @@ namespace MoreItems
                         critStorage = self.gameObject.AddComponent<CritStorage>();
                     }
                     critStorage.crit = self.crit;
-                    self.crit = 10/Mathf.Pow(2,count-1);
+                    self.crit = 10/Mathf.Pow(2, count - 1);
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace MoreItems
                     attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0 &&
                     attackerBody.GetComponent<CritStorage>() is CritStorage critStorage)
                 {
-                    damageInfo.damage *= 1f + stacks * crit * 0.1f * Mathf.Pow(2, stacks);
+                    damageInfo.damage *= 1f + stacks * critStorage.crit * 0.1f * Mathf.Pow(2, stacks - 1);
                 }
             }
             orig(self, damageInfo);
@@ -68,3 +68,4 @@ namespace MoreItems
     }
 
 }
+ 
