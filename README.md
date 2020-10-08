@@ -40,6 +40,15 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+### v1.1.3
+ - Balance: Serrated Spoon now gives 10% damage crit damage per chance which means it will be about even with normal crit but allow you to go over 100%. 
+ - Bugfix: Added more null checks that could cause errors with serrated spoon & knife
+
+### v1.1.2
+ - Bugfix: Fixed Serrated Spoon not increasing crit damage. 
+
+### v1.1.1
+ - Bugfix: Fixed bug that would prevent falldamage. 
 
 ### v1.1.0
  - New Item: Cracked Orb: Lunar, all of your attacks are doubled, but your damage is halved.

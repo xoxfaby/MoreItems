@@ -9,7 +9,7 @@ using System.Reflection;
 namespace MoreItems
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "1.1.2")]
+    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "1.1.3")]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ItemAPI), nameof(ItemDropAPI), nameof(ResourcesAPI), nameof(BuffAPI))]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     public class MoreItems : BaseUnityPlugin
