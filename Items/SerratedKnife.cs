@@ -28,16 +28,12 @@ namespace MoreItems
 
         void hook_HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if (damageInfo.crit)
+            if (damageInfo.crit && damageInfo.attacker)
             {
                 CharacterBody characterBody = damageInfo.attacker.GetComponent<CharacterBody>();
-                if (characterBody)
+                if (characterBody && characterBody.master && characterBody.master.inventory)
                 {
-                    CharacterMaster master = characterBody.master;
-                    if (master && master.inventory)
-                    {
-                        damageInfo.damage += damageInfo.damage * 0.10f * master.inventory.GetItemCount(this.ItemIndex);
-                    }
+                    damageInfo.damage += damageInfo.damage * 0.10f * characterBody.master.inventory.GetItemCount(this.ItemIndex);
                 }
             }
             orig(self, damageInfo);

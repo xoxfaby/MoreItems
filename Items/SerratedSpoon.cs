@@ -56,8 +56,9 @@ namespace MoreItems
         {
             if (damageInfo.crit)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-                if (attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0 && self.GetComponent<CritStorage>()?.crit is float crit)
+                if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && 
+                    attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0 &&
+                    attackerBody.GetComponent<CritStorage>() is CritStorage critStorage)
                 {
                     damageInfo.damage *= 1f + stacks * crit * 0.1f * Mathf.Pow(2, stacks);
                 }

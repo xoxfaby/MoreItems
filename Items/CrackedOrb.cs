@@ -110,8 +110,7 @@ namespace MoreItems
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-            if (attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0)
+            if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0)
             {
                 damageInfo.damage /= stacks + 1;
                 damageInfo.procCoefficient /= stacks + 1;
@@ -266,36 +265,31 @@ namespace MoreItems
 
         private void ProjectileManager_FireProjectile_FireProjectileInfo(On.RoR2.Projectile.ProjectileManager.orig_FireProjectile_FireProjectileInfo orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
         {
-            if (fireProjectileInfo.owner)
+            if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory && characterBody.inventory.GetItemCount(this.ItemIndex) is int count && count > 0)
             {
-                if (fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
+                var oldRotation = fireProjectileInfo.rotation;
+                Vector3 axis = Vector3.Cross(Vector3.up, fireProjectileInfo.rotation * Vector3.forward);
+                float x = UnityEngine.Random.Range(0f, 2 * count);
+                float z = UnityEngine.Random.Range(0f, 360f);
+                Vector3 vector = Quaternion.Euler(0f, 0f, z) * (Quaternion.Euler(x, 0f, 0f) * Vector3.forward);
+                float y = vector.y;
+                vector.y = 0f;
+                float angle = (Mathf.Atan2(vector.z, vector.x) * 57.29578f - 90f);
+                float angle2 = Mathf.Atan2(y, vector.magnitude) * 57.29578f;
+                fireProjectileInfo.rotation = Quaternion.LookRotation(Quaternion.AngleAxis(angle, Vector3.up) * (Quaternion.AngleAxis(angle2, axis) * fireProjectileInfo.rotation * Vector3.forward));
+                for (int i = 0; i < count; i++)
                 {
-                    if (characterBody.inventory.GetItemCount(this.ItemIndex) is int count && count > 0)
-                    {
-                        var oldRotation = fireProjectileInfo.rotation; 
-                        Vector3 axis = Vector3.Cross(Vector3.up, fireProjectileInfo.rotation * Vector3.forward);
-                        float x = UnityEngine.Random.Range(0f, 2 * count);
-                        float z = UnityEngine.Random.Range(0f, 360f);
-                        Vector3 vector = Quaternion.Euler(0f, 0f, z) * (Quaternion.Euler(x, 0f, 0f) * Vector3.forward);
-                        float y = vector.y;
-                        vector.y = 0f;
-                        float angle = (Mathf.Atan2(vector.z, vector.x) * 57.29578f - 90f);
-                        float angle2 = Mathf.Atan2(y, vector.magnitude) * 57.29578f;
-                        fireProjectileInfo.rotation = Quaternion.LookRotation(Quaternion.AngleAxis(angle, Vector3.up) * (Quaternion.AngleAxis(angle2, axis) * fireProjectileInfo.rotation * Vector3.forward));
-                        for (int i = 0; i < count; i++)
-                        {
-                            orig(self, fireProjectileInfo);
-                            x = UnityEngine.Random.Range(0f, 2 * count);
-                            z = UnityEngine.Random.Range(0f, 360f);
-                            vector = Quaternion.Euler(0f, 0f, z) * (Quaternion.Euler(x, 0f, 0f) * Vector3.forward);
-                            y = vector.y;
-                            vector.y = 0f;
-                            angle = (Mathf.Atan2(vector.z, vector.x) * 57.29578f - 90f) ;
-                            angle2 = Mathf.Atan2(y, vector.magnitude) * 57.29578f ;
-                            fireProjectileInfo.rotation = Quaternion.LookRotation(Quaternion.AngleAxis(angle, Vector3.up) * (Quaternion.AngleAxis(angle2, axis) * oldRotation * Vector3.forward));
-                        }
-                    }
+                    orig(self, fireProjectileInfo);
+                    x = UnityEngine.Random.Range(0f, 2 * count);
+                    z = UnityEngine.Random.Range(0f, 360f);
+                    vector = Quaternion.Euler(0f, 0f, z) * (Quaternion.Euler(x, 0f, 0f) * Vector3.forward);
+                    y = vector.y;
+                    vector.y = 0f;
+                    angle = (Mathf.Atan2(vector.z, vector.x) * 57.29578f - 90f);
+                    angle2 = Mathf.Atan2(y, vector.magnitude) * 57.29578f;
+                    fireProjectileInfo.rotation = Quaternion.LookRotation(Quaternion.AngleAxis(angle, Vector3.up) * (Quaternion.AngleAxis(angle2, axis) * oldRotation * Vector3.forward));
                 }
+
             }
             orig(self, fireProjectileInfo);
         }
