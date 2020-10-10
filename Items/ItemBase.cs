@@ -18,12 +18,12 @@ namespace MoreItems
 
         protected void Init(ItemTemplate itemTemplate)
         {
-            PrefabPath = $"{MoreItems.ModPrefix}Assets/{itemTemplate.internalName}.prefab";
-            IconPath = $"{MoreItems.ModPrefix}Assets/{itemTemplate.internalName}.png";
+            PrefabPath = $"{MoreItems.ModPrefix}Assets/Items/{itemTemplate.internalName}/prefab.prefab";
+            IconPath = $"{MoreItems.ModPrefix}Assets/Items/{itemTemplate.internalName}/icon.png";
 
 
 
-                Prefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/{itemTemplate.internalName}.prefab");
+            Prefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/{itemTemplate.internalName}/prefab.prefab");
 
             var itemDef = new ItemDef
             {
@@ -31,10 +31,10 @@ namespace MoreItems
                 tier = itemTemplate.tier,
                 pickupModelPath = PrefabPath,
                 pickupIconPath = IconPath,
-                nameToken = $"{itemTemplate.internalName}_NAME",
-                pickupToken = $"{itemTemplate.internalName}_PICKUP",
-                descriptionToken = $"{itemTemplate.internalName}_DESC",
-                loreToken = $"{itemTemplate.internalName}_LORE",
+                nameToken = $"ITEM_{itemTemplate.internalName.ToUpper()}_NAME",
+                pickupToken = $"ITEM_{itemTemplate.internalName.ToUpper()}_PICKUP",
+                descriptionToken = $"ITEM_{itemTemplate.internalName.ToUpper()}_DESC",
+                loreToken = $"ITEM_{itemTemplate.internalName.ToUpper()}_LORE",
                 tags = itemTemplate.tags ?? new ItemTag[] { }
             };
 
