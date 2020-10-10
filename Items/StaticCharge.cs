@@ -56,7 +56,7 @@ namespace MoreItems
         }
         void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if (damageInfo.attacker)
+            if (damageInfo.attacker && damageInfo.attacker != self.gameObject)
             {
                 CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
                 if (damageInfo.crit && attackerBody && attackerBody.master && attackerBody.master.inventory)
