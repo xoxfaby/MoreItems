@@ -40,6 +40,9 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+### v1.1.4
+ - Oops: Removed prototype item that wasn't supposed to get added. 
+
 ### v1.1.3
  - Balance: Serrated Spoon now gives 10% damage crit damage per chance which means it will be about even with normal crit but allow you to go over 100%. 
  - Bugfix: Added more null checks that could cause errors with serrated spoon & knife
