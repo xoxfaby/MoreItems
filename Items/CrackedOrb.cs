@@ -36,7 +36,7 @@ namespace MoreItems
             var itemTemplate = new ItemTemplate();
             itemTemplate.name = "Cracked Orb";
             itemTemplate.tier = ItemTier.Lunar;
-            itemTemplate.internalName = "CRACKED_ORB";
+            itemTemplate.internalName = "CrackedOrb";
             itemTemplate.pickupText = "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>";
             itemTemplate.descriptionText = "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>";
             itemTemplate.loreText = "<style=cMono>NO DATA FOUND</style>";
