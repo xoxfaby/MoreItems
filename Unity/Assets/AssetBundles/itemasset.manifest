@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 810986818
+CRC: 2541501324
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1606a9f7b4704d05507e09ec10d5a02a
+    Hash: 753120bbcec1611bd88505f1e806cd8a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0cfd436c26d6f179dd1f728730b85370
+    Hash: 4e4719fa11f6e1326c6934d1701b1b67
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -24,6 +24,10 @@ ClassTypes:
 - Class: 43
   Script: {instanceID: 0}
 - Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
   Script: {instanceID: 0}
 - Class: 91
   Script: {instanceID: 0}
@@ -48,5 +52,6 @@ Assets:
 - Assets/Items/SerratedSpoon/icon.png
 - Assets/Items/SerratedKnife/prefab.prefab
 - Assets/Items/CrackedOrb/prefab.prefab
+- Assets/Items/CrackedOrb/icon.png
 - Assets/Items/SerratedKnife/icon.png
 Dependencies: []

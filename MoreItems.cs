@@ -1,38 +1,29 @@
 ﻿using System;
 using BepInEx;
 using RoR2;
-using R2API;
-using R2API.Utils;
 using UnityEngine;
 using System.Reflection;
 
 namespace MoreItems
 {
-    [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "1.1.4")]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ItemAPI), nameof(ItemDropAPI), nameof(ResourcesAPI), nameof(BuffAPI))]
-    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
+    [BepInDependency("com.xoxfaby.ItemBase")]
+    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "2.0.0.1")]
     public class MoreItems : BaseUnityPlugin
     {
-        public static AssetBundle bundle;
-        public static string ModPrefix = "@MoreItems:";
-        static MoreItems()
-        {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MoreItems.itemasset"))
-            {
-                bundle = AssetBundle.LoadFromStream(stream);
-                var provider = new AssetBundleResourcesProvider(ModPrefix.TrimEnd(':'), bundle);
-                ResourcesAPI.AddProvider(provider);
-            }
-        }
         public void Awake()
         {
-
-            new SerratedKnife();
-            new StaticCharge();
-            new CrackedOrb();
-            new SerratedSpoon();
-            //new LongerOSP();
+            AssetBundle bundle;
+            using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MoreItems.Unity.Assets.AssetBundles.itemasset"))
+            {
+                bundle = AssetBundle.LoadFromStream(stream);
+                bundle.LoadAllAssets();
+            }
+            var itemProvider = new ItemBase.ItemProvider(bundle);
+            itemProvider.AddItem(new SerratedKnife());
+            itemProvider.AddItem(new StaticCharge());
+            itemProvider.AddItem(new CrackedOrb());
+            itemProvider.AddItem(new SerratedSpoon());
+            //itemProvider.AddItem(new LongerOSP());
         }
     }
 }

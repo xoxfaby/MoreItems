@@ -40,6 +40,10 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+### v2.0.0
+ - Aniversary Update: Now works in the Anniversary Update.
+ - Now depends on my own item helper instead of R2API.
+
 ### v1.1.4
  - Oops: Removed prototype item that wasn't supposed to get added. 
 

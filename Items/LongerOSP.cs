@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace MoreItems
 {
-    internal class LongerOSP : ItemBase
+    internal class LongerOSP : ItemBase.Item
     {
         BuffIndex buffIndex;
         internal LongerOSP()
@@ -26,7 +25,6 @@ namespace MoreItems
             itemTemplate.descriptionText = "LONGER_OSP";
             itemTemplate.loreText = "LONGER_OSP";
 
-            Init(itemTemplate);
         }
 
         private void CharacterBody_FixedUpdate(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
@@ -45,7 +43,7 @@ namespace MoreItems
                 Debug.LogWarning("[Server] function 'System.Void RoR2.HealthComponent::TriggerOneShotProtection()' called on client");
                 return;
             }
-            if (self.body.inventory && self.body.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0)
+            if (self.body.inventory && self.body.inventory.GetItemCount(this.itemIndex) is int stacks && stacks > 0)
             {
                 self.ospTimer = 1 * stacks;
             }

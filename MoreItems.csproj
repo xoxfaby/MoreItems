@@ -5,11 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="itemasset" />
+    <Compile Remove="Unity\Assets\AssetBundleBrowser\**" />
+    <Compile Remove="Unity\Library\**" />
+    <EmbeddedResource Remove="Unity\Assets\AssetBundleBrowser\**" />
+    <EmbeddedResource Remove="Unity\Library\**" />
+    <None Remove="Unity\Assets\AssetBundleBrowser\**" />
+    <None Remove="Unity\Library\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="itemasset" />
+    <None Remove="Unity\Assets\AssetBundles\itemasset" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Unity\Assets\AssetBundles\itemasset" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ItemBase\ItemBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,10 +84,6 @@
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>..\Libs\MonoMod.Utils.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="R2API">
-      <HintPath>..\Libs\R2API.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="Rewired_Core">

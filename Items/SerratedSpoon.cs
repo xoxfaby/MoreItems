@@ -6,10 +6,8 @@ using System.Reflection;
 using MonoMod.Cil;
 using Mono.Cecil.Cil;
 
-using R2API;
 using RoR2;
 using UnityEngine;
-using RoR2.Orbs;
 
 namespace MoreItems
 {
@@ -17,22 +15,24 @@ namespace MoreItems
     {
         public float crit = 1;
     }
-    internal class SerratedSpoon : ItemBase
+    internal class SerratedSpoon : ItemBase.Item
     {
-        internal SerratedSpoon()
+        public SerratedSpoon()
+        {
+            itemTemplate = new ItemTemplate
+            {
+                name = "Serrated Spoon",
+                tier = ItemTier.Lunar,
+                internalName = "SerratedSpoon",
+                pickupText = "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.",
+                descriptionText = "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>",
+                loreText = "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see...",
+            };
+        }
+        public override void Hook()
         {
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
-
-            var itemTemplate = new ItemTemplate();
-            itemTemplate.name = "Serrated Spoon";
-            itemTemplate.tier = ItemTier.Lunar;
-            itemTemplate.internalName = "SerratedSpoon";
-            itemTemplate.pickupText = "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.";
-            itemTemplate.descriptionText = "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>";
-            itemTemplate.loreText = "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see...";
-
-            Init(itemTemplate);
         }
 
         void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
@@ -40,7 +40,7 @@ namespace MoreItems
             orig(self);
             if (self.inventory)
             {
-                if (self.inventory.GetItemCount(this.ItemIndex) is int count && count > 0)
+                if (self.inventory.GetItemCount(itemDef) is int count && count > 0)
                 {
                     CritStorage critStorage = self.gameObject.GetComponent<CritStorage>();
                     if (!critStorage)
@@ -57,7 +57,7 @@ namespace MoreItems
             if (damageInfo.crit)
             {
                 if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && 
-                    attackerBody.inventory && attackerBody.inventory.GetItemCount(this.ItemIndex) is int stacks && stacks > 0 &&
+                    attackerBody.inventory && attackerBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0 &&
                     attackerBody.GetComponent<CritStorage>() is CritStorage critStorage)
                 {
                     damageInfo.damage *= 1 + (stacks-1) + critStorage.crit * 0.1f * Mathf.Pow(2, stacks - 1);
