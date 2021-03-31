@@ -3,32 +3,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
+using BetterAPI;
 using RoR2;
 using UnityEngine;
 
 namespace MoreItems
 {
-    internal class SerratedKnife : ItemBase.Item
+    internal static class SerratedKnife
     {
-        public SerratedKnife()
+        static ItemDef itemDef;
+        static SerratedKnife()
         {
-            itemTemplate = new ItemTemplate
-            {
-                name = "Serrated Knife",
-                tier = ItemTier.Tier1,
-                internalName = "SerratedKnife",
-                pickupText = "Your critical strikes do more damage.",
-                descriptionText = "Your critial strikes deal <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> more damage.",
-                loreText = "You might think it would be cruel to use a knife like this, but I think it's more humane, ending their suffering far more quickly...",
-            };
+            itemDef = MoreItems.AddItem(
+                "Serrated Knife",
+                ItemTier.Tier1,
+                "SerratedKnife",
+                "Your critical strikes do more damage.",
+                "Your critial strikes deal <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> more damage.",
+                "You might think it would be cruel to use a knife like this, but I think it's more humane, ending their suffering far more quickly..."
+            );
         }
 
-        public override void Hook()
+        public static void Add()
         {
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
         }
 
-        void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.crit && damageInfo.attacker)
             {

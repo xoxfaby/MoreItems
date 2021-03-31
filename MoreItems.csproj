@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemBase\ItemBase.csproj" />
+    <ProjectReference Include="..\ItemBase\BetterAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

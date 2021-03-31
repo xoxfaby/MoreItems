@@ -12,9 +12,10 @@ using RoR2.Orbs;
 
 namespace MoreItems
 {
-    internal class RangeIncrease : ItemBase.Item
+    internal class RangeIncrease
     {
         List<LightningOrb> bouncedOrbs = new List<LightningOrb>();
+        ItemDef itemDef;
         internal RangeIncrease()
         {
 
@@ -26,7 +27,7 @@ namespace MoreItems
             On.RoR2.OverlapAttack.Fire += OverlapAttack_Fire;
             IL.RoR2.OverlapAttack.Fire += OverlapAttack_FireIL;
 
-            var itemTemplate = new ItemTemplate();
+            var itemTemplate = new BetterAPI.Items.ItemTemplate();
             itemTemplate.name = "Projectile Spam";
             itemTemplate.tier = ItemTier.Lunar;
             itemTemplate.internalName = "PROJECTILE_SPAM";
@@ -60,7 +61,7 @@ namespace MoreItems
                 {
                     if (self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                     {
-                        if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                        if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                         {
                             return (count + 1) * 0.5f;
                         }
@@ -78,7 +79,7 @@ namespace MoreItems
             {
                 if (self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -97,7 +98,7 @@ namespace MoreItems
             {
                 if (lightningOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         if (!bouncedOrbs.Contains(lightningOrb))
                         {
@@ -137,7 +138,7 @@ namespace MoreItems
             {
                 if (genericDamageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -150,7 +151,7 @@ namespace MoreItems
             {
                 if (damageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -163,7 +164,7 @@ namespace MoreItems
             {
                 if (devilOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -182,7 +183,7 @@ namespace MoreItems
             {
                 if (fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         var oldRotation = fireProjectileInfo.rotation;
                         fireProjectileInfo.rotation = Quaternion.RotateTowards(oldRotation, UnityEngine.Random.rotation, (float)Math.Pow(2, count));
@@ -204,7 +205,7 @@ namespace MoreItems
             {
                 if (self.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         self.minSpread = self.maxSpread;
                         self.maxSpread *= 1 + count;

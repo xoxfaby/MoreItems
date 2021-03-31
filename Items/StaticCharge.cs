@@ -11,23 +11,23 @@ using UnityEngine;
 
 namespace MoreItems
 {
-    internal class StaticCharge : ItemBase.Item
+    internal static class StaticCharge
     {
-        BuffDef buffDef;
-        public StaticCharge()
+        static BuffDef buffDef;
+        static ItemDef itemDef;
+        static StaticCharge()
         {
-            itemTemplate = new ItemTemplate
-            {
-                name = "Static Charge",
-                tier = ItemTier.Tier2,
-                internalName = "StaticCharge",
-                pickupText = "Your critical strikes build up static charge to shock the next enemy to attack you.",
-                descriptionText = "Gain <style=cIsDamage>5% critical chance</style>. <style=cIsDamage>Critical strikes</style> grant you a stack of <style=cIsDamage>static charge</style>. The next time you are attacked, <style=cIsUtility>shock</style> the attacker, dealing <style=cIsDamage>5% <style=cStack>(+5% per stack)</style> damage</style> for each stack of <style=cIsDamage>static charge</style>.",
-                loreText = "I can feel a buzz in the air... Don't get to close to me... ",
-            };
+            itemDef = MoreItems.AddItem(
+                "Static Charge",
+                ItemTier.Tier2,
+                "StaticCharge",
+                "Your critical strikes build up static charge to shock the next enemy to attack you.",
+                "Gain <style=cIsDamage>5% critical chance</style>. <style=cIsDamage>Critical strikes</style> grant you a stack of <style=cIsDamage>static charge</style>. The next time you are attacked, <style=cIsUtility>shock</style> the attacker, dealing <style=cIsDamage>5% <style=cStack>(+5% per stack)</style> damage</style> for each stack of <style=cIsDamage>static charge</style>.",
+                "I can feel a buzz in the air... Don't get to close to me... "
+            );
         }
 
-        public override void Hook()
+        public static void Add()
         {
 
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
@@ -38,40 +38,38 @@ namespace MoreItems
             buffDef = ScriptableObject.CreateInstance<BuffDef>();
 
             buffDef.name = "Static Charge";
-            buffDef.iconSprite = this.Icon;
+            buffDef.iconSprite = itemDef.pickupIconSprite;
             buffDef.isDebuff = false;
             buffDef.canStack = true;
 
-            ItemBase.BuffProvider.AddBuff(buffDef);
+            BetterAPI.Buffs.Add(buffDef);
         }
 
-        BuffIndex buffIndex { get { return buffDef.buffIndex; } }
-
-        void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        static void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory)
             {
-                if(self.inventory.GetItemCount(this.itemIndex) > 0)
+                if(self.inventory.GetItemCount(itemDef) > 0)
                 {
                     self.crit += 5;
                 }
             }
         }
-        void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.attacker && damageInfo.attacker != self.gameObject)
             {
                 CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
                 if (damageInfo.crit && attackerBody && attackerBody.master && attackerBody.master.inventory)
                 {
-                    if (attackerBody.master.inventory.GetItemCount(this.itemIndex) > 0)
+                    if (attackerBody.master.inventory.GetItemCount(itemDef) > 0)
                     {
-                        attackerBody.AddBuff(this.buffIndex);
+                        attackerBody.AddBuff(buffDef);
                     }
                 }
                 
-                if(attackerBody && self.body.HasBuff(this.buffIndex))
+                if(attackerBody && self.body.HasBuff(buffDef))
                 {
                     HealthComponent attackerHealthComponent = attackerBody.healthComponent;
                     if (attackerHealthComponent)
@@ -80,11 +78,11 @@ namespace MoreItems
                         {
                             attacker = self.body.gameObject,
                             crit = Util.CheckRoll(self.body.crit, self.body.master),
-                            damage = self.body.damage * self.body.GetBuffCount(this.buffIndex) * 0.05f,
+                            damage = self.body.damage * self.body.GetBuffCount(buffDef) * 0.05f,
                             procCoefficient = 1,
                             damageType = DamageType.Shock5s
                         };
-                        self.body.SetBuffCount(buffIndex, 0);
+                        self.body.SetBuffCount(buffDef.buffIndex, 0);
                         attackerHealthComponent.TakeDamage(zapDamageInfo);
                     }
                 }

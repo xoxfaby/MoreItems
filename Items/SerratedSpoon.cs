@@ -15,27 +15,27 @@ namespace MoreItems
     {
         public float crit = 1;
     }
-    internal class SerratedSpoon : ItemBase.Item
+    static class SerratedSpoon
     {
-        public SerratedSpoon()
+        static ItemDef itemDef;
+        static SerratedSpoon()
         {
-            itemTemplate = new ItemTemplate
-            {
-                name = "Serrated Spoon",
-                tier = ItemTier.Lunar,
-                internalName = "SerratedSpoon",
-                pickupText = "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.",
-                descriptionText = "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>",
-                loreText = "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see...",
-            };
+            itemDef = MoreItems.AddItem(
+                "Serrated Spoon",
+                ItemTier.Lunar,
+                "SerratedSpoon",
+                "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.",
+                "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>",
+                "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see..."
+            );
         }
-        public override void Hook()
+        public static void Add()
         {
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
         }
 
-        void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        static void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory)
@@ -52,7 +52,7 @@ namespace MoreItems
                 }
             }
         }
-        void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.crit)
             {
@@ -60,7 +60,7 @@ namespace MoreItems
                     attackerBody.inventory && attackerBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0 &&
                     attackerBody.GetComponent<CritStorage>() is CritStorage critStorage)
                 {
-                    damageInfo.damage *= 1 + (stacks-1) + critStorage.crit * 0.1f * Mathf.Pow(2, stacks - 1);
+                    damageInfo.damage *= 1 + (stacks-1) + critStorage.crit * 0.01f * Mathf.Pow(2, stacks - 1);
                 }
             }
             orig(self, damageInfo);

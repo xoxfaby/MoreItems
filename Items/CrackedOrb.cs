@@ -7,34 +7,32 @@ using System.Runtime.CompilerServices;
 using MonoMod.Cil;
 using Mono.Cecil.Cil;
 
+using BetterAPI;
+
 using RoR2;
 using UnityEngine;
 using RoR2.Orbs;
 
 namespace MoreItems
 {
-    internal class CrackedOrb : ItemBase.Item
+    internal static class CrackedOrb
     {
-        
-
-        ConditionalWeakTable<OverlapAttack, List<OverlapAttack>> childAttacks = new ConditionalWeakTable<OverlapAttack, List<OverlapAttack>>();
-        List<LightningOrb> bouncedOrbs = new List<LightningOrb>();
-        public CrackedOrb()
+        static ConditionalWeakTable<OverlapAttack, List<OverlapAttack>> childAttacks = new ConditionalWeakTable<OverlapAttack, List<OverlapAttack>>();
+        static List<LightningOrb> bouncedOrbs = new List<LightningOrb>();
+        static ItemDef itemDef;
+        static CrackedOrb()
         {
-            itemTemplate = new ItemTemplate
-            {
-                name = "Cracked Orb",
-                tier = ItemTier.Lunar,
-                internalName = "CrackedOrb",
-                pickupText = "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
-                descriptionText = "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
-                loreText = "<style=cMono>NO DATA FOUND</style>",
-
-            };
+            itemDef = MoreItems.AddItem(
+                "Cracked Orb",
+                 ItemTier.Lunar,
+                "CrackedOrb",
+                "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
+                "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
+                "<style=cMono>NO DATA FOUND</style>"
+            );
         }
-
-        public override void Hook()
-        {
+        public static void Add()
+        { 
             On.RoR2.BulletAttack.Fire += BulletAttack_Fire;
             On.RoR2.Projectile.ProjectileManager.FireProjectile_FireProjectileInfo += ProjectileManager_FireProjectile_FireProjectileInfo;
             On.RoR2.Orbs.OrbManager.AddOrb += OrbManager_AddOrb;
@@ -47,7 +45,7 @@ namespace MoreItems
             IL.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.HealPulse += TreebotFlower2Projectile_HealPulse;
         }
 
-        private void TreebotFlower2Projectile_HealPulse(ILContext il)
+        static private void TreebotFlower2Projectile_HealPulse(ILContext il)
         {
             var c = new ILCursor(il);
             c.GotoNext(x => x.MatchLdcR4(1));
@@ -55,7 +53,7 @@ namespace MoreItems
             c.Emit(OpCodes.Ldloc_0);
             c.EmitDelegate<Func<HealthComponent, float>>(healthComponent =>
              {
-                 if(healthComponent.body.inventory && healthComponent.body.inventory.GetItemCount(this.itemIndex) is int stacks && stacks > 0)
+                 if(healthComponent.body.inventory && healthComponent.body.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
                  {
                      return 1f / stacks;
                  }
@@ -63,14 +61,14 @@ namespace MoreItems
              });
         }
 
-        private void ProjectileDotZone_Start(On.RoR2.Projectile.ProjectileDotZone.orig_Start orig, RoR2.Projectile.ProjectileDotZone self)
+        static private void ProjectileDotZone_Start(On.RoR2.Projectile.ProjectileDotZone.orig_Start orig, RoR2.Projectile.ProjectileDotZone self)
         {
             orig(self);
             if (self.attack.attacker)
             {
                 if (self.attack.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         self.projectileDamage.damage /= count + 1;
                     }
@@ -78,7 +76,7 @@ namespace MoreItems
             }
         }
 
-        private void OverlapAttack_ResetIgnoredHealthComponents(On.RoR2.OverlapAttack.orig_ResetIgnoredHealthComponents orig, OverlapAttack self)
+        static private void OverlapAttack_ResetIgnoredHealthComponents(On.RoR2.OverlapAttack.orig_ResetIgnoredHealthComponents orig, OverlapAttack self)
         {
             
             List<OverlapAttack> attacks;
@@ -92,7 +90,7 @@ namespace MoreItems
             orig(self);
         }
 
-        private void Evis_FixedUpdate(ILContext il)
+        static private void Evis_FixedUpdate(ILContext il)
         {
             var c = new ILCursor(il);
             c.GotoNext(
@@ -103,7 +101,7 @@ namespace MoreItems
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate<Func<EntityStates.Merc.Evis, float>>((self) =>
             {
-                if (self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCount(this.itemIndex) is int stacks && stacks > 0)
+                if (self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
                 {
                     return 1f / (stacks + 1);
                 }
@@ -111,9 +109,9 @@ namespace MoreItems
             });
         }
 
-        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(this.itemIndex) is int stacks && stacks > 0)
+            if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
             {
                 damageInfo.damage /= stacks + 1;
                 damageInfo.procCoefficient /= stacks + 1;
@@ -122,7 +120,7 @@ namespace MoreItems
             orig(self, damageInfo);
         }
 
-        private void LightningOrb_OnArrival(ILContext il)
+        static private void LightningOrb_OnArrival(ILContext il)
         {
             var c = new ILCursor(il);
             c.GotoNext(x => x.MatchNewobj<LightningOrb>());
@@ -134,13 +132,13 @@ namespace MoreItems
         }
 
 
-        private bool OverlapAttack_Fire(On.RoR2.OverlapAttack.orig_Fire orig, OverlapAttack self, List<HurtBox> hitResults)
+        static private bool OverlapAttack_Fire(On.RoR2.OverlapAttack.orig_Fire orig, OverlapAttack self, List<HurtBox> hitResults)
         {
             if (self.attacker)
             {
                 if (self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         List<OverlapAttack> attacks;
                         if (childAttacks.TryGetValue(self, out attacks))
@@ -181,13 +179,13 @@ namespace MoreItems
             return orig(self, hitResults);
         }
 
-        private void OrbManager_AddOrb(On.RoR2.Orbs.OrbManager.orig_AddOrb orig, RoR2.Orbs.OrbManager self, RoR2.Orbs.Orb orb)
+        static private void OrbManager_AddOrb(On.RoR2.Orbs.OrbManager.orig_AddOrb orig, RoR2.Orbs.OrbManager self, RoR2.Orbs.Orb orb)
         {
             if (orb is RoR2.Orbs.LightningOrb lightningOrb && lightningOrb.attacker)
             {
                 if (lightningOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         if (!bouncedOrbs.Contains(lightningOrb))
                         {
@@ -227,7 +225,7 @@ namespace MoreItems
             {
                 if (genericDamageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -240,7 +238,7 @@ namespace MoreItems
             {
                 if (damageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -253,7 +251,7 @@ namespace MoreItems
             {
                 if (devilOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
                     {
                         for (int i = 0; i < count; i++)
                         {
@@ -266,9 +264,9 @@ namespace MoreItems
             orig(self, orb);
         }
 
-        private void ProjectileManager_FireProjectile_FireProjectileInfo(On.RoR2.Projectile.ProjectileManager.orig_FireProjectile_FireProjectileInfo orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
+        static private void ProjectileManager_FireProjectile_FireProjectileInfo(On.RoR2.Projectile.ProjectileManager.orig_FireProjectile_FireProjectileInfo orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
         {
-            if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory && characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+            if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory && characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
             {
                 var oldRotation = fireProjectileInfo.rotation;
                 Vector3 axis = Vector3.Cross(Vector3.up, fireProjectileInfo.rotation * Vector3.forward);
@@ -297,13 +295,13 @@ namespace MoreItems
             orig(self, fireProjectileInfo);
         }
 
-        private void BulletAttack_Fire(On.RoR2.BulletAttack.orig_Fire orig, BulletAttack self)
+        static private void BulletAttack_Fire(On.RoR2.BulletAttack.orig_Fire orig, BulletAttack self)
         {
             if (self.owner)
             {
                 if (self.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(this.itemIndex) is int count && count > 0)
+                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
                     {
                         self.maxSpread = Mathf.Max(self.maxSpread*count*0.75f,2 * count);
                         self.bulletCount *= (uint) count + 1;

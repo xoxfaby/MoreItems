@@ -9,15 +9,16 @@ using UnityEngine.Networking;
 
 namespace MoreItems
 {
-    internal class LongerOSP : ItemBase.Item
+    internal class LongerOSP
     {
+        ItemDef itemDef;
         BuffIndex buffIndex;
         internal LongerOSP()
         {
             On.RoR2.HealthComponent.TriggerOneShotProtection += HealthComponent_TriggerOneShotProtection;
             On.RoR2.CharacterBody.FixedUpdate += CharacterBody_FixedUpdate;
 
-            var itemTemplate = new ItemTemplate();
+            var itemTemplate = new BetterAPI.Items.ItemTemplate();
             itemTemplate.name = "Longer OSP";
             itemTemplate.tier = ItemTier.Tier1;
             itemTemplate.internalName = "LONGER_OSP";
@@ -43,7 +44,7 @@ namespace MoreItems
                 Debug.LogWarning("[Server] function 'System.Void RoR2.HealthComponent::TriggerOneShotProtection()' called on client");
                 return;
             }
-            if (self.body.inventory && self.body.inventory.GetItemCount(this.itemIndex) is int stacks && stacks > 0)
+            if (self.body.inventory && self.body.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
             {
                 self.ospTimer = 1 * stacks;
             }

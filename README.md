@@ -40,6 +40,10 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+### v2.0.1
+ - Bugfix: Fix Serrated Spoon been completely busted
+ - Internal changes: Lots of internal reshuffling to fit the new BetterAPI
+
 ### v2.0.0
  - Aniversary Update: Now works in the Anniversary Update.
  - Now depends on my own item helper instead of R2API.
