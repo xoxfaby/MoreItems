@@ -40,30 +40,41 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
-### v2.0.1
+
+## v2.1.0
+ - Cracked Orb Rework/Rebalance:
+   - ~~Old Effect: All of your attacks are doubled, but your damage is halved.~~
+   - New Effect: You have an extra chance to duplicate your attacks, but an equal chance to duplicate attacks that hit you.
+   - New Effect: 30% chance to trigger extra attacks, can go over 100% to trigger even more attacks.
+   - Visual Update: The item now shows up floating next your character when you have it.
+   - Bugfix: Artificier Nano-Spear no longer collides with itself. 
+ - Serrated Spoon: Visual Update: The item now show up on your hip when you have it. 
+ - More visual updates coming soon!
+
+#### v2.0.1
  - Bugfix: Fix Serrated Spoon been completely busted
  - Internal changes: Lots of internal reshuffling to fit the new BetterAPI
 
-### v2.0.0
+## v2.0.0
  - Aniversary Update: Now works in the Anniversary Update.
  - Now depends on my own item helper instead of R2API.
 
-### v1.1.4
+#### v1.1.4
  - Oops: Removed prototype item that wasn't supposed to get added. 
 
-### v1.1.3
+#### v1.1.3
  - Balance: Serrated Spoon now gives 10% damage crit damage per chance which means it will be about even with normal crit but allow you to go over 100%. 
  - Bugfix: Added more null checks that could cause errors with serrated spoon & knife
 
-### v1.1.2
+#### v1.1.2
  - Bugfix: Fixed Serrated Spoon not increasing crit damage. 
 
-### v1.1.1
+#### v1.1.1
  - Bugfix: Fixed bug that would prevent falldamage. 
 
 ### v1.1.0
  - New Item: Cracked Orb: Lunar, all of your attacks are doubled, but your damage is halved.
  - New Item: Serrated Spoon: Lunar, your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.
 
-### v1.0.0
+## v1.0.0
  - Inital Release

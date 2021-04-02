@@ -20,13 +20,26 @@ namespace MoreItems
         static ItemDef itemDef;
         static SerratedSpoon()
         {
+            var rules = new BetterAPI.Items.CharacterItemDisplayRuleSet();
+            rules.AddDefaultRule(new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.25f, 0.25f, 0f),
+                    localAngles = new Vector3(180f, 0f, 9f),
+                    localScale = new Vector3(0.1f, 0.1f, 0.1f),
+                    followerPrefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/serratedspoon/prefab.prefab"),
+                }
+            );
+
             itemDef = MoreItems.AddItem(
                 "Serrated Spoon",
                 ItemTier.Lunar,
                 "SerratedSpoon",
                 "Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.",
                 "Your <style=cIsDamage>critical chance</style> is <style=cIsHealth>fixed</style> to <style=cIsDamage>10%</style> <style=cStack>(halved per stack)</style>. <style=cIsDamage>Critical chance</style> effects grant you <style=cIsDamage>10%</style> <style=cStack>(+10% per stack)</style> <style=cIsDamage>critical damage</style> per 1% chance <style=cStack>(doubled per stack)</style>",
-                "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see..."
+                "<style=cMono>//--AUTO-TRANSCRIPTION FROM KITCHEN 16C OF UES [Redacted] --//</style>\n\n MAN 1: Why could you POSSIBLY need a serrated spoon?\n\nMAN 2: Just in case.\n\nMAN 1: In case what?\n\nMan 2: You'll see...",
+                rules
             );
         }
         public static void Add()

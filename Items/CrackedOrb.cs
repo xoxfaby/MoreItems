@@ -22,14 +22,40 @@ namespace MoreItems
         static ItemDef itemDef;
         static CrackedOrb()
         {
+            BetterAPI.Items.CharacterItemDisplayRuleSet rules = new BetterAPI.Items.CharacterItemDisplayRuleSet();
+            rules.AddDefaultRule(new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    childName = "Head",
+                    localPos = new Vector3(0.45f, 0.45f, 0f),
+                    localAngles = new Vector3(0f, -40f, 0f),
+                    localScale = new Vector3(0.2f, 0.2f, 0.2f),
+                    followerPrefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/crackedorb/prefab.prefab"),
+                }
+            );
+
+            Vector3 generalScale = new Vector3(1, 1, 1);
             itemDef = MoreItems.AddItem(
                 "Cracked Orb",
                  ItemTier.Lunar,
                 "CrackedOrb",
-                "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
-                "All of your attacks are doubled, <color=#FF7F7F>but your damage is halved.</color>",
-                "<style=cMono>NO DATA FOUND</style>"
+                "You have an extra chance to duplicate your attacks, <color=#FF7F7F>but an equal chance to duplicate attacks that hit you.</color>",
+                "You have a <style=cIsDamage>30%</style> <style=cStack>(+30% per stack)</style> chance to duplicate your attacks, <color=#FF7F7F>but an equal chance to duplicate attacks that hit you.</color>",
+                "<style=cMono>NO DATA FOUND</style>",
+                rules
             );
+        }
+
+        internal static int rollAttackCount(CharacterBody characterBody)
+        {
+            if (characterBody.inventory)
+            {
+                var stacks = characterBody.inventory.GetItemCount(itemDef);
+                var chance = 0.3f * stacks;
+                var flat_chance = (int)chance;
+                return flat_chance + Convert.ToInt32(RoR2.Util.CheckRoll((chance - flat_chance) * 100, characterBody.master));
+            }
+            return 0;
         }
         public static void Add()
         { 
@@ -40,55 +66,28 @@ namespace MoreItems
             On.RoR2.OverlapAttack.Fire += OverlapAttack_Fire;
             On.RoR2.OverlapAttack.ResetIgnoredHealthComponents += OverlapAttack_ResetIgnoredHealthComponents;
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
-            On.RoR2.Projectile.ProjectileDotZone.Start += ProjectileDotZone_Start;
             IL.EntityStates.Merc.Evis.FixedUpdate += Evis_FixedUpdate;
-            IL.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.HealPulse += TreebotFlower2Projectile_HealPulse;
+            On.RoR2.Projectile.ProjectileSimple.Awake += ProjectileSimple_Awake;
         }
 
-        static private void TreebotFlower2Projectile_HealPulse(ILContext il)
-        {
-            var c = new ILCursor(il);
-            c.GotoNext(x => x.MatchLdcR4(1));
-            c.Remove();
-            c.Emit(OpCodes.Ldloc_0);
-            c.EmitDelegate<Func<HealthComponent, float>>(healthComponent =>
-             {
-                 if(healthComponent.body.inventory && healthComponent.body.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
-                 {
-                     return 1f / stacks;
-                 }
-                 return 1f;
-             });
-        }
-
-        static private void ProjectileDotZone_Start(On.RoR2.Projectile.ProjectileDotZone.orig_Start orig, RoR2.Projectile.ProjectileDotZone self)
+        private static void ProjectileSimple_Awake(On.RoR2.Projectile.ProjectileSimple.orig_Awake orig, RoR2.Projectile.ProjectileSimple self)
         {
             orig(self);
-            if (self.attack.attacker)
+            if (self.gameObject.name == "MageIceBombProjectile(Clone)")
             {
-                if (self.attack.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
-                {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
-                    {
-                        self.projectileDamage.damage /= count + 1;
-                    }
-                }
+                self.gameObject.layer = 21;
             }
         }
 
-        static private void OverlapAttack_ResetIgnoredHealthComponents(On.RoR2.OverlapAttack.orig_ResetIgnoredHealthComponents orig, OverlapAttack self)
+        static private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            
-            List<OverlapAttack> attacks;
-            if (childAttacks.TryGetValue(self, out attacks))
+            for (int i = 0; i < rollAttackCount(self.body); i++)
             {
-                foreach (var attack in attacks)
-                {
-                    orig(attack);
-                }
+                orig(self, damageInfo);
             }
-            orig(self);
+            orig(self, damageInfo);
         }
+
 
         static private void Evis_FixedUpdate(ILContext il)
         {
@@ -100,24 +99,13 @@ namespace MoreItems
             c.Remove();
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate<Func<EntityStates.Merc.Evis, float>>((self) =>
-            {
-                if (self.characterBody && self.characterBody.inventory && self.characterBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
+            { 
+                if (self.characterBody)
                 {
-                    return 1f / (stacks + 1);
+                    return 1f / (rollAttackCount(self.characterBody) + 1);
                 }
                 return 1f;
             });
-        }
-
-        static private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
-        {
-            if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>() is CharacterBody attackerBody && attackerBody.inventory && attackerBody.inventory.GetItemCount(itemDef) is int stacks && stacks > 0)
-            {
-                damageInfo.damage /= stacks + 1;
-                damageInfo.procCoefficient /= stacks + 1;
-                damageInfo.force /= stacks + 1;
-            }
-            orig(self, damageInfo);
         }
 
         static private void LightningOrb_OnArrival(ILContext il)
@@ -131,49 +119,50 @@ namespace MoreItems
             });
         }
 
+        static private void OverlapAttack_ResetIgnoredHealthComponents(On.RoR2.OverlapAttack.orig_ResetIgnoredHealthComponents orig, OverlapAttack self)
+        {
+
+            if (childAttacks.TryGetValue(self, out var attacks))
+            {
+                foreach (var attack in attacks)
+                {
+                    orig(attack);
+                }
+            }
+            orig(self);
+        }
 
         static private bool OverlapAttack_Fire(On.RoR2.OverlapAttack.orig_Fire orig, OverlapAttack self, List<HurtBox> hitResults)
         {
-            if (self.attacker)
+            if (self.attacker && self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody)
             {
-                if (self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
+                for (int i = 0; i < rollAttackCount(characterBody); i++)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
+                    List<OverlapAttack> attacks;
+                    if (!childAttacks.TryGetValue(self, out attacks))
                     {
-                        List<OverlapAttack> attacks;
-                        if (childAttacks.TryGetValue(self, out attacks))
-                        {
-                            foreach(var attack in attacks)
-                            {
-                                orig(attack, hitResults);
-                            }
-                        }
-                        else
-                        {
-                            attacks = new List<OverlapAttack>();
-                            for (int i = 0; i < count; i++)
-                            {
-                                OverlapAttack overlapAttack = new OverlapAttack();
-                                overlapAttack.attacker = self.attacker;
-                                overlapAttack.attackerFiltering = self.attackerFiltering;
-                                overlapAttack.damage = self.damage;
-                                overlapAttack.damageColorIndex = self.damageColorIndex;
-                                overlapAttack.damageType = self.damageType;
-                                overlapAttack.forceVector = self.forceVector;
-                                overlapAttack.hitBoxGroup = self.hitBoxGroup;
-                                overlapAttack.hitEffectPrefab = self.hitEffectPrefab;
-                                overlapAttack.inflictor = self.inflictor;
-                                overlapAttack.isCrit = self.isCrit;
-                                overlapAttack.procChainMask = self.procChainMask;
-                                overlapAttack.procCoefficient = self.procCoefficient;
-                                overlapAttack.teamIndex = self.teamIndex;
-                                attacks.Add(overlapAttack);
-                                orig(overlapAttack, hitResults);
-                            }
-                            childAttacks.Add(self, attacks);
-                        }
-                        
+                        attacks = new List<OverlapAttack>();
+                        childAttacks.Add(self, attacks);
                     }
+                    if (i >= attacks.Count)
+                    {
+                        OverlapAttack overlapAttack = new OverlapAttack();
+                        overlapAttack.attacker = self.attacker;
+                        overlapAttack.attackerFiltering = self.attackerFiltering;
+                        overlapAttack.damage = self.damage;
+                        overlapAttack.damageColorIndex = self.damageColorIndex;
+                        overlapAttack.damageType = self.damageType;
+                        overlapAttack.forceVector = self.forceVector;
+                        overlapAttack.hitBoxGroup = self.hitBoxGroup;
+                        overlapAttack.hitEffectPrefab = self.hitEffectPrefab;
+                        overlapAttack.inflictor = self.inflictor;
+                        overlapAttack.isCrit = self.isCrit;
+                        overlapAttack.procChainMask = self.procChainMask;
+                        overlapAttack.procCoefficient = self.procCoefficient;
+                        overlapAttack.teamIndex = self.teamIndex;
+                        attacks.Add(overlapAttack);
+                    }
+                    orig(attacks[i], hitResults);
                 }
             }
             return orig(self, hitResults);
@@ -183,80 +172,71 @@ namespace MoreItems
         {
             if (orb is RoR2.Orbs.LightningOrb lightningOrb && lightningOrb.attacker)
             {
-                if (lightningOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
+                if (lightningOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
+                    if (!bouncedOrbs.Contains(lightningOrb))
                     {
-                        if (!bouncedOrbs.Contains(lightningOrb))
+                        for (int i = 0; i < rollAttackCount(characterBody) ; i++)
                         {
-                            for (int i = 0; i < count; i++)
-                            {
-                                LightningOrb lightningOrbCopy = new LightningOrb();
-                                lightningOrbCopy.search = new BullseyeSearch();
-                                lightningOrbCopy.origin = lightningOrb.origin;
-                                lightningOrbCopy.target = lightningOrb.target;
-                                lightningOrbCopy.attacker = lightningOrb.attacker;
-                                lightningOrbCopy.inflictor = lightningOrb.inflictor;
-                                lightningOrbCopy.teamIndex = lightningOrb.teamIndex;
-                                lightningOrbCopy.damageValue = lightningOrb.damageValue;
-                                lightningOrbCopy.bouncesRemaining = lightningOrb.bouncesRemaining;
-                                lightningOrbCopy.isCrit = lightningOrb.isCrit;
-                                lightningOrbCopy.bouncedObjects = new List<HealthComponent>(lightningOrb.bouncedObjects);
-                                lightningOrbCopy.lightningType = lightningOrb.lightningType;
-                                lightningOrbCopy.procChainMask = lightningOrb.procChainMask;
-                                lightningOrbCopy.procCoefficient = lightningOrb.procCoefficient;
-                                lightningOrbCopy.damageColorIndex = lightningOrb.damageColorIndex;
-                                lightningOrbCopy.damageCoefficientPerBounce = lightningOrb.damageCoefficientPerBounce;
-                                lightningOrbCopy.speed = lightningOrb.speed;
-                                lightningOrbCopy.range = lightningOrb.range;
-                                lightningOrbCopy.damageType = lightningOrb.damageType;
-                                lightningOrbCopy.failedToKill = lightningOrb.failedToKill;
-                                orig(self,lightningOrbCopy);
-                            }
+                            LightningOrb lightningOrbCopy = new LightningOrb();
+                            lightningOrbCopy.search = new BullseyeSearch();
+                            lightningOrbCopy.origin = lightningOrb.origin;
+                            lightningOrbCopy.target = lightningOrb.target;
+                            lightningOrbCopy.attacker = lightningOrb.attacker;
+                            lightningOrbCopy.inflictor = lightningOrb.inflictor;
+                            lightningOrbCopy.teamIndex = lightningOrb.teamIndex;
+                            lightningOrbCopy.damageValue = lightningOrb.damageValue;
+                            lightningOrbCopy.bouncesRemaining = lightningOrb.bouncesRemaining;
+                            lightningOrbCopy.isCrit = lightningOrb.isCrit;
+                            lightningOrbCopy.bouncedObjects = new List<HealthComponent>(lightningOrb.bouncedObjects);
+                            lightningOrbCopy.lightningType = lightningOrb.lightningType;
+                            lightningOrbCopy.procChainMask = lightningOrb.procChainMask;
+                            lightningOrbCopy.procCoefficient = lightningOrb.procCoefficient;
+                            lightningOrbCopy.damageColorIndex = lightningOrb.damageColorIndex;
+                            lightningOrbCopy.damageCoefficientPerBounce = lightningOrb.damageCoefficientPerBounce;
+                            lightningOrbCopy.speed = lightningOrb.speed;
+                            lightningOrbCopy.range = lightningOrb.range;
+                            lightningOrbCopy.damageType = lightningOrb.damageType;
+                            lightningOrbCopy.failedToKill = lightningOrb.failedToKill;
+                            orig(self,lightningOrbCopy);
                         }
-                        else
-                        {
-                            bouncedOrbs.Remove(lightningOrb);
-                        }
+                    }
+                    else
+                    {
+                        bouncedOrbs.Remove(lightningOrb);
                     }
                 }
 
-            }else if (orb is RoR2.Orbs.GenericDamageOrb genericDamageOrb && genericDamageOrb.attacker)
+            }
+            else if (orb is RoR2.Orbs.GenericDamageOrb genericDamageOrb && genericDamageOrb.attacker)
             {
-                if (genericDamageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
+                if (genericDamageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
+                    for (int i = 0; i < rollAttackCount(characterBody); i++)
                     {
-                        for (int i = 0; i < count; i++)
-                        {
-                            orig(self, orb);
-                        }
+                        orig(self, orb);
                     }
                 }
 
-            } else if (orb is RoR2.Orbs.DamageOrb damageOrb && damageOrb.attacker)
+            } 
+            else if (orb is RoR2.Orbs.DamageOrb damageOrb && damageOrb.attacker)
             {
-                if (damageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
+                if (damageOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
+                    for (int i = 0; i < rollAttackCount(characterBody); i++)
                     {
-                        for (int i = 0; i < count; i++)
-                        {
-                            orig(self, orb);
-                        }
+                        orig(self, orb);
                     }
                 }
 
-            } else if (orb is RoR2.Orbs.DevilOrb devilOrb && devilOrb.attacker)
+            } 
+            else if (orb is RoR2.Orbs.DevilOrb devilOrb && devilOrb.attacker)
             {
                 if (devilOrb.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count)
+                    for (int i = 0; i < rollAttackCount(characterBody); i++)
                     {
-                        for (int i = 0; i < count; i++)
-                        {
-                            orig(self, orb);
-                        }
+                        orig(self, orb);
                     }
                 }
 
@@ -266,7 +246,7 @@ namespace MoreItems
 
         static private void ProjectileManager_FireProjectile_FireProjectileInfo(On.RoR2.Projectile.ProjectileManager.orig_FireProjectile_FireProjectileInfo orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
         {
-            if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory && characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
+            if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && rollAttackCount(characterBody) is int count && count > 0)
             {
                 var oldRotation = fireProjectileInfo.rotation;
                 Vector3 axis = Vector3.Cross(Vector3.up, fireProjectileInfo.rotation * Vector3.forward);
@@ -301,10 +281,10 @@ namespace MoreItems
             {
                 if (self.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && characterBody.inventory)
                 {
-                    if (characterBody.inventory.GetItemCount(itemDef) is int count && count > 0)
+                    if (rollAttackCount(characterBody) is int count && count > 0)
                     {
                         self.maxSpread = Mathf.Max(self.maxSpread*count*0.75f,2 * count);
-                        self.bulletCount *= (uint) count + 1;
+                        self.bulletCount += (uint)count;
                     }
                 }
             }

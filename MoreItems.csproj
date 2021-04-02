@@ -7,10 +7,13 @@
   <ItemGroup>
     <Compile Remove="Unity\Assets\AssetBundleBrowser\**" />
     <Compile Remove="Unity\Library\**" />
+    <Compile Remove="Unity\Packages\**" />
     <EmbeddedResource Remove="Unity\Assets\AssetBundleBrowser\**" />
     <EmbeddedResource Remove="Unity\Library\**" />
+    <EmbeddedResource Remove="Unity\Packages\**" />
     <None Remove="Unity\Assets\AssetBundleBrowser\**" />
     <None Remove="Unity\Library\**" />
+    <None Remove="Unity\Packages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemBase\BetterAPI.csproj" />
+    <ProjectReference Include="..\BetterAPI\BetterAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +35,6 @@
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Libs\Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
     </Reference>
     <Reference Include="Assembly-CSharp.R2API.mm">
       <HintPath>..\Libs\Assembly-CSharp.R2API.mm.dll</HintPath>
