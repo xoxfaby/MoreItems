@@ -40,6 +40,8 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+#### v2.1.1
+ - Serrated Spoon rebalance: 1 spoon should now be 50% better DPS than no spoon. 
 
 ## v2.1.0
  - Cracked Orb Rework/Rebalance:

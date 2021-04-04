@@ -1,11 +1,11 @@
 ﻿{
   "name": "MoreItems",
-  "version_number": "2.1.0",
+  "version_number": "2.1.1",
   "website_url": "https://github.com/xoxfaby/MoreItems",
   "description": "Cracked Orb Rework! Extra items intended to fit into the style and balance of the vanilla gameplay.",
   "dependencies": [
     "bbepis-BepInExPack-5.3.1",
     "XoXFaby-MMHOOK_Standalone-1.0.1",
-    "XoXFaby-BetterAPI-1.1.0"
+    "XoXFaby-BetterAPI-1.1.2"
   ]
 }
