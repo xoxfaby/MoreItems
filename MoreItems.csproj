@@ -34,7 +34,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\Libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\Libs\Assembly-CSharp-Release.publicized.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp.R2API.mm">
       <HintPath>..\Libs\Assembly-CSharp.R2API.mm.dll</HintPath>

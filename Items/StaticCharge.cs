@@ -41,6 +41,7 @@ namespace MoreItems
             buffDef.iconSprite = itemDef.pickupIconSprite;
             buffDef.isDebuff = false;
             buffDef.canStack = true;
+            buffDef.buffColor = new Color(246, 255, 71);
 
             BetterAPI.Buffs.Add(buffDef);
         }

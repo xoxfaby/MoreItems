@@ -46,14 +46,14 @@ namespace MoreItems
             );
         }
 
-        internal static int rollAttackCount(CharacterBody characterBody)
+        internal static int rollAttackCount(CharacterBody characterBody, bool onSelf = false)
         {
             if (characterBody.inventory)
             {
                 var stacks = characterBody.inventory.GetItemCount(itemDef);
                 var chance = 0.3f * stacks;
                 var flat_chance = (int)chance;
-                return flat_chance + Convert.ToInt32(RoR2.Util.CheckRoll((chance - flat_chance) * 100, characterBody.master));
+                return flat_chance + Convert.ToInt32(RoR2.Util.CheckRoll((chance - flat_chance) * 100, onSelf ? -characterBody.master.luck : characterBody.master.luck));
             }
             return 0;
         }
@@ -107,7 +107,6 @@ namespace MoreItems
                 return 1f;
             });
         }
-
         static private void LightningOrb_OnArrival(ILContext il)
         {
             var c = new ILCursor(il);
