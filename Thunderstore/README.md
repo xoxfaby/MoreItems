@@ -40,8 +40,11 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+#### v2.1.3
+ - Oops: Actually implement fix from last version.
+
 #### v2.1.2
- - Cracked Orb no longer hurts you more often if you have luck. For now, luck helps you. If this is too strong this functionality might get removed. 
+ - Bugfix: Cracked Orb no longer hurts you more often if you have luck. For now, luck helps you. If this is too strong this functionality might get removed. 
 
 #### v2.1.1
  - Serrated Spoon rebalance: 1 spoon should now be 50% better DPS than no spoon. 

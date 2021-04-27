@@ -28,11 +28,11 @@ namespace MoreItems
                     localPos = new Vector3(0.25f, 0.25f, 0f),
                     localAngles = new Vector3(180f, 0f, 9f),
                     localScale = new Vector3(0.1f, 0.1f, 0.1f),
-                    followerPrefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/serratedspoon/prefab.prefab"),
+                    followerPrefab = MoreItemsPlugin.bundle.LoadAsset<GameObject>($"Assets/Items/serratedspoon/prefab.prefab"),
                 }
             );
 
-            itemDef = MoreItems.AddItem(
+            itemDef = MoreItemsPlugin.AddItem(
                 "Serrated Spoon",
                 ItemTier.Lunar,
                 "SerratedSpoon",
@@ -44,11 +44,11 @@ namespace MoreItems
         }
         public static void Add()
         {
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
-            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
+            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
+            MoreItemsPlugin.Hooks.Add<RoR2.CharacterBody>( "RecalculateStats", CharacterBody_RecalculateStats );
         }
 
-        static void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        static void CharacterBody_RecalculateStats(Action<RoR2.CharacterBody> orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory)
@@ -65,7 +65,7 @@ namespace MoreItems
                 }
             }
         }
-        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.crit)
             {

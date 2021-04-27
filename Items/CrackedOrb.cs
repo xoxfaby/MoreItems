@@ -30,12 +30,11 @@ namespace MoreItems
                     localPos = new Vector3(0.45f, 0.45f, 0f),
                     localAngles = new Vector3(0f, -40f, 0f),
                     localScale = new Vector3(0.2f, 0.2f, 0.2f),
-                    followerPrefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/crackedorb/prefab.prefab"),
+                    followerPrefab = MoreItemsPlugin.bundle.LoadAsset<GameObject>($"Assets/Items/crackedorb/prefab.prefab"),
                 }
             );
 
-            Vector3 generalScale = new Vector3(1, 1, 1);
-            itemDef = MoreItems.AddItem(
+            itemDef = MoreItemsPlugin.AddItem(
                 "Cracked Orb",
                  ItemTier.Lunar,
                 "CrackedOrb",
@@ -59,18 +58,18 @@ namespace MoreItems
         }
         public static void Add()
         { 
-            On.RoR2.BulletAttack.Fire += BulletAttack_Fire;
-            On.RoR2.Projectile.ProjectileManager.FireProjectile_FireProjectileInfo += ProjectileManager_FireProjectile_FireProjectileInfo;
-            On.RoR2.Orbs.OrbManager.AddOrb += OrbManager_AddOrb;
-            IL.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
-            On.RoR2.OverlapAttack.Fire += OverlapAttack_Fire;
-            On.RoR2.OverlapAttack.ResetIgnoredHealthComponents += OverlapAttack_ResetIgnoredHealthComponents;
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
-            IL.EntityStates.Merc.Evis.FixedUpdate += Evis_FixedUpdate;
-            On.RoR2.Projectile.ProjectileSimple.Awake += ProjectileSimple_Awake;
+            MoreItemsPlugin.Hooks.Add<RoR2.BulletAttack>( "Fire", BulletAttack_Fire );
+            MoreItemsPlugin.Hooks.Add<RoR2.Projectile.ProjectileManager, RoR2.Projectile.FireProjectileInfo>( "FireProjectile", ProjectileManager_FireProjectile_FireProjectileInfo );
+            MoreItemsPlugin.Hooks.Add<RoR2.Orbs.OrbManager, RoR2.Orbs.Orb>( "AddOrb", OrbManager_AddOrb );
+            MoreItemsPlugin.Hooks.Add<RoR2.Orbs.LightningOrb>( "OnArrival", LightningOrb_OnArrival );
+            MoreItemsPlugin.Hooks.Add<RoR2.OverlapAttack, List<HurtBox>, bool>( "Fire", OverlapAttack_Fire );
+            MoreItemsPlugin.Hooks.Add<RoR2.OverlapAttack>( "ResetIgnoredHealthComponents", OverlapAttack_ResetIgnoredHealthComponents );
+            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
+            MoreItemsPlugin.Hooks.Add<EntityStates.Merc.Evis>( "FixedUpdate", Evis_FixedUpdate);
+            MoreItemsPlugin.Hooks.Add<RoR2.Projectile.ProjectileSimple>( "Awake", ProjectileSimple_Awake );
         }
 
-        private static void ProjectileSimple_Awake(On.RoR2.Projectile.ProjectileSimple.orig_Awake orig, RoR2.Projectile.ProjectileSimple self)
+        private static void ProjectileSimple_Awake(Action<RoR2.Projectile.ProjectileSimple> orig, RoR2.Projectile.ProjectileSimple self)
         {
             orig(self);
             if (self.gameObject.name == "MageIceBombProjectile(Clone)")
@@ -79,9 +78,9 @@ namespace MoreItems
             }
         }
 
-        static private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static private void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
         {
-            for (int i = 0; i < rollAttackCount(self.body); i++)
+            for (int i = 0; i < rollAttackCount(self.body, true); i++)
             {
                 orig(self, damageInfo);
             }
@@ -118,9 +117,8 @@ namespace MoreItems
             });
         }
 
-        static private void OverlapAttack_ResetIgnoredHealthComponents(On.RoR2.OverlapAttack.orig_ResetIgnoredHealthComponents orig, OverlapAttack self)
+        static private void OverlapAttack_ResetIgnoredHealthComponents(Action<RoR2.OverlapAttack> orig, OverlapAttack self)
         {
-
             if (childAttacks.TryGetValue(self, out var attacks))
             {
                 foreach (var attack in attacks)
@@ -131,34 +129,35 @@ namespace MoreItems
             orig(self);
         }
 
-        static private bool OverlapAttack_Fire(On.RoR2.OverlapAttack.orig_Fire orig, OverlapAttack self, List<HurtBox> hitResults)
+        static private bool OverlapAttack_Fire(Func<RoR2.OverlapAttack, List<HurtBox>, bool> orig, OverlapAttack self, List<HurtBox> hitResults)
         {
             if (self.attacker && self.attacker.GetComponent<CharacterBody>() is CharacterBody characterBody)
             {
                 for (int i = 0; i < rollAttackCount(characterBody); i++)
                 {
-                    List<OverlapAttack> attacks;
-                    if (!childAttacks.TryGetValue(self, out attacks))
+                    if (!childAttacks.TryGetValue(self, out List<OverlapAttack> attacks))
                     {
                         attacks = new List<OverlapAttack>();
                         childAttacks.Add(self, attacks);
                     }
                     if (i >= attacks.Count)
                     {
-                        OverlapAttack overlapAttack = new OverlapAttack();
-                        overlapAttack.attacker = self.attacker;
-                        overlapAttack.attackerFiltering = self.attackerFiltering;
-                        overlapAttack.damage = self.damage;
-                        overlapAttack.damageColorIndex = self.damageColorIndex;
-                        overlapAttack.damageType = self.damageType;
-                        overlapAttack.forceVector = self.forceVector;
-                        overlapAttack.hitBoxGroup = self.hitBoxGroup;
-                        overlapAttack.hitEffectPrefab = self.hitEffectPrefab;
-                        overlapAttack.inflictor = self.inflictor;
-                        overlapAttack.isCrit = self.isCrit;
-                        overlapAttack.procChainMask = self.procChainMask;
-                        overlapAttack.procCoefficient = self.procCoefficient;
-                        overlapAttack.teamIndex = self.teamIndex;
+                        var overlapAttack = new OverlapAttack
+                        {
+                            attacker = self.attacker,
+                            attackerFiltering = self.attackerFiltering,
+                            damage = self.damage,
+                            damageColorIndex = self.damageColorIndex,
+                            damageType = self.damageType,
+                            forceVector = self.forceVector,
+                            hitBoxGroup = self.hitBoxGroup,
+                            hitEffectPrefab = self.hitEffectPrefab,
+                            inflictor = self.inflictor,
+                            isCrit = self.isCrit,
+                            procChainMask = self.procChainMask,
+                            procCoefficient = self.procCoefficient,
+                            teamIndex = self.teamIndex
+                        };
                         attacks.Add(overlapAttack);
                     }
                     orig(attacks[i], hitResults);
@@ -167,7 +166,7 @@ namespace MoreItems
             return orig(self, hitResults);
         }
 
-        static private void OrbManager_AddOrb(On.RoR2.Orbs.OrbManager.orig_AddOrb orig, RoR2.Orbs.OrbManager self, RoR2.Orbs.Orb orb)
+        static private void OrbManager_AddOrb(Action<RoR2.Orbs.OrbManager, RoR2.Orbs.Orb> orig, RoR2.Orbs.OrbManager self, RoR2.Orbs.Orb orb)
         {
             if (orb is RoR2.Orbs.LightningOrb lightningOrb && lightningOrb.attacker)
             {
@@ -243,7 +242,7 @@ namespace MoreItems
             orig(self, orb);
         }
 
-        static private void ProjectileManager_FireProjectile_FireProjectileInfo(On.RoR2.Projectile.ProjectileManager.orig_FireProjectile_FireProjectileInfo orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
+        static private void ProjectileManager_FireProjectile_FireProjectileInfo(Action<RoR2.Projectile.ProjectileManager, RoR2.Projectile.FireProjectileInfo> orig, RoR2.Projectile.ProjectileManager self, RoR2.Projectile.FireProjectileInfo fireProjectileInfo)
         {
             if (fireProjectileInfo.owner && fireProjectileInfo.owner.GetComponent<CharacterBody>() is CharacterBody characterBody && rollAttackCount(characterBody) is int count && count > 0)
             {
@@ -274,7 +273,7 @@ namespace MoreItems
             orig(self, fireProjectileInfo);
         }
 
-        static private void BulletAttack_Fire(On.RoR2.BulletAttack.orig_Fire orig, BulletAttack self)
+        static private void BulletAttack_Fire(Action<RoR2.BulletAttack> orig, BulletAttack self)
         {
             if (self.owner)
             {

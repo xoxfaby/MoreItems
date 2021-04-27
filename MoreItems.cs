@@ -8,12 +8,14 @@ using BetterAPI;
 namespace MoreItems
 {
     [BepInDependency("com.xoxfaby.BetterAPI")]
-    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "2.1.2.1")]
-    public class MoreItems : BaseUnityPlugin
+    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "2.1.3.1")]
+    public class MoreItemsPlugin : BetterUnityPlugin<MoreItemsPlugin>
     {
         internal static AssetBundle bundle;
 
-        static MoreItems()
+        public override BaseUnityPlugin typeReference => throw new NotImplementedException();
+
+        static MoreItemsPlugin()
         {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MoreItems.Unity.Assets.AssetBundles.itemasset"))
             {
@@ -21,19 +23,21 @@ namespace MoreItems
                 bundle.LoadAllAssets();
             }
         }
-        public void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             for (int i = 0; i < 32; i++)
             {
                 Physics.IgnoreLayerCollision(21, i, Physics.GetIgnoreLayerCollision(8, i));
             }
-            Physics.IgnoreLayerCollision(21, 21, true) ;
+            Physics.IgnoreLayerCollision(21, 21, true);
             SerratedKnife.Add();
             StaticCharge.Add();
             CrackedOrb.Add();
             SerratedSpoon.Add();
             //itemProvider.AddItem(new LongerOSP());
         }
+
         internal static ItemDef AddItem(String name, ItemTier tier, String internalName, String pickupText, String descriptionText, String loreText, BetterAPI.Items.CharacterItemDisplayRule[] characterItemDisplayRules = null)
         {
             var itemTemplate = new Items.ItemTemplate
@@ -41,8 +45,8 @@ namespace MoreItems
                 name = name,
                 tier = tier,
                 internalName = internalName,
-                prefab = MoreItems.bundle.LoadAsset<GameObject>($"Assets/Items/{internalName}/prefab.prefab"),
-                icon = MoreItems.bundle.LoadAsset<Sprite>($"Assets/Items/{internalName}/icon.png"),
+                prefab = MoreItemsPlugin.bundle.LoadAsset<GameObject>($"Assets/Items/{internalName}/prefab.prefab"),
+                icon = MoreItemsPlugin.bundle.LoadAsset<Sprite>($"Assets/Items/{internalName}/icon.png"),
                 pickupText = pickupText,
                 descriptionText = descriptionText,
                 loreText = loreText,

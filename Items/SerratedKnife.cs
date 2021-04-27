@@ -14,7 +14,7 @@ namespace MoreItems
         static ItemDef itemDef;
         static SerratedKnife()
         {
-            itemDef = MoreItems.AddItem(
+            itemDef = MoreItemsPlugin.AddItem(
                 "Serrated Knife",
                 ItemTier.Tier1,
                 "SerratedKnife",
@@ -26,10 +26,10 @@ namespace MoreItems
 
         public static void Add()
         {
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
         }
 
-        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.crit && damageInfo.attacker)
             {

@@ -15,8 +15,8 @@ namespace MoreItems
         BuffIndex buffIndex;
         internal LongerOSP()
         {
-            On.RoR2.HealthComponent.TriggerOneShotProtection += HealthComponent_TriggerOneShotProtection;
-            On.RoR2.CharacterBody.FixedUpdate += CharacterBody_FixedUpdate;
+            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent>( "TriggerOneShotProtection", HealthComponent_TriggerOneShotProtection );
+            MoreItemsPlugin.Hooks.Add<RoR2.CharacterBody>( "FixedUpdate", CharacterBody_FixedUpdate );
 
             var itemTemplate = new BetterAPI.Items.ItemTemplate();
             itemTemplate.name = "Longer OSP";
@@ -28,7 +28,7 @@ namespace MoreItems
 
         }
 
-        private void CharacterBody_FixedUpdate(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
+        private void CharacterBody_FixedUpdate(Action<RoR2.CharacterBody> orig, CharacterBody self)
         {
             orig(self);
             if (self.HasBuff(this.buffIndex))
@@ -37,7 +37,7 @@ namespace MoreItems
             }
         }
 
-        private void HealthComponent_TriggerOneShotProtection(On.RoR2.HealthComponent.orig_TriggerOneShotProtection orig, HealthComponent self)
+        private void HealthComponent_TriggerOneShotProtection(Action<RoR2.HealthComponent> orig, HealthComponent self)
         {
             if (!NetworkServer.active)
             {

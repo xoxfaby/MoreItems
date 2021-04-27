@@ -17,7 +17,7 @@ namespace MoreItems
         static ItemDef itemDef;
         static StaticCharge()
         {
-            itemDef = MoreItems.AddItem(
+            itemDef = MoreItemsPlugin.AddItem(
                 "Static Charge",
                 ItemTier.Tier2,
                 "StaticCharge",
@@ -30,8 +30,8 @@ namespace MoreItems
         public static void Add()
         {
 
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
-            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
+            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
+            MoreItemsPlugin.Hooks.Add<RoR2.CharacterBody>( "RecalculateStats", CharacterBody_RecalculateStats );
 
 
 
@@ -46,7 +46,7 @@ namespace MoreItems
             BetterAPI.Buffs.Add(buffDef);
         }
 
-        static void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        static void CharacterBody_RecalculateStats(Action<RoR2.CharacterBody> orig, CharacterBody self)
         {
             orig(self);
             if (self.inventory)
@@ -57,7 +57,7 @@ namespace MoreItems
                 }
             }
         }
-        static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
+        static void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.attacker && damageInfo.attacker != self.gameObject)
             {
