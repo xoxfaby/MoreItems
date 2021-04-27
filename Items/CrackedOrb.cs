@@ -282,7 +282,7 @@ namespace MoreItems
                     if (rollAttackCount(characterBody) is int count && count > 0)
                     {
                         self.maxSpread = Mathf.Max(self.maxSpread*count*0.75f,2 * count);
-                        self.bulletCount += (uint)count;
+                        self.bulletCount *= (uint)count + 1;
                     }
                 }
             }
