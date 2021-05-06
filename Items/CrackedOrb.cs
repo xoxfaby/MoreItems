@@ -176,27 +176,29 @@ namespace MoreItems
                     {
                         for (int i = 0; i < rollAttackCount(characterBody) ; i++)
                         {
-                            LightningOrb lightningOrbCopy = new LightningOrb();
-                            lightningOrbCopy.search = new BullseyeSearch();
-                            lightningOrbCopy.origin = lightningOrb.origin;
-                            lightningOrbCopy.target = lightningOrb.target;
-                            lightningOrbCopy.attacker = lightningOrb.attacker;
-                            lightningOrbCopy.inflictor = lightningOrb.inflictor;
-                            lightningOrbCopy.teamIndex = lightningOrb.teamIndex;
-                            lightningOrbCopy.damageValue = lightningOrb.damageValue;
-                            lightningOrbCopy.bouncesRemaining = lightningOrb.bouncesRemaining;
-                            lightningOrbCopy.isCrit = lightningOrb.isCrit;
-                            lightningOrbCopy.bouncedObjects = new List<HealthComponent>(lightningOrb.bouncedObjects);
-                            lightningOrbCopy.lightningType = lightningOrb.lightningType;
-                            lightningOrbCopy.procChainMask = lightningOrb.procChainMask;
-                            lightningOrbCopy.procCoefficient = lightningOrb.procCoefficient;
-                            lightningOrbCopy.damageColorIndex = lightningOrb.damageColorIndex;
-                            lightningOrbCopy.damageCoefficientPerBounce = lightningOrb.damageCoefficientPerBounce;
-                            lightningOrbCopy.speed = lightningOrb.speed;
-                            lightningOrbCopy.range = lightningOrb.range;
-                            lightningOrbCopy.damageType = lightningOrb.damageType;
-                            lightningOrbCopy.failedToKill = lightningOrb.failedToKill;
-                            orig(self,lightningOrbCopy);
+                            LightningOrb lightningOrbCopy = new LightningOrb
+                            {
+                                search = new BullseyeSearch(),
+                                origin = lightningOrb.origin,
+                                target = lightningOrb.target,
+                                attacker = lightningOrb.attacker,
+                                inflictor = lightningOrb.inflictor,
+                                teamIndex = lightningOrb.teamIndex,
+                                damageValue = lightningOrb.damageValue,
+                                bouncesRemaining = lightningOrb.bouncesRemaining,
+                                isCrit = lightningOrb.isCrit,
+                                bouncedObjects = lightningOrb.bouncedObjects != null ? new List<HealthComponent>(lightningOrb.bouncedObjects) : new List<HealthComponent>(),
+                                lightningType = lightningOrb.lightningType,
+                                procChainMask = lightningOrb.procChainMask,
+                                procCoefficient = lightningOrb.procCoefficient,
+                                damageColorIndex = lightningOrb.damageColorIndex,
+                                damageCoefficientPerBounce = lightningOrb.damageCoefficientPerBounce,
+                                speed = lightningOrb.speed,
+                                range = lightningOrb.range,
+                                damageType = lightningOrb.damageType,
+                                failedToKill = lightningOrb.failedToKill
+                            };
+                            orig(self, lightningOrbCopy);
                         }
                     }
                     else
