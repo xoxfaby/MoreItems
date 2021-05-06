@@ -8,7 +8,7 @@ using BetterAPI;
 namespace MoreItems
 {
     [BepInDependency("com.xoxfaby.BetterAPI")]
-    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "2.1.3.1")]
+    [BepInPlugin("com.xoxfaby.MoreItems", "MoreItems", "2.1.4.1")]
     public class MoreItemsPlugin : BetterUnityPlugin<MoreItemsPlugin>
     {
         internal static AssetBundle bundle;

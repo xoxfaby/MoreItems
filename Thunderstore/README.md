@@ -40,6 +40,11 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+#### v2.1.4
+ - Internal: Remove MMHook dependency, this should improve performance.
+ - Bugfix: Cracked Orb: Fixed Shotguns only getting 1 extra bullet instead of doubling the bullet count. 
+ - Bugfix: Cracked Orb: Fixed bug with razorwire because of lightningOrb.bouncedObjects being null.  
+
 #### v2.1.3
  - Oops: Actually implement fix from last version.
 
