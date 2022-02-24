@@ -22,7 +22,7 @@ namespace MoreItems
         static ItemDef itemDef;
         static CrackedOrb()
         {
-            BetterAPI.Items.CharacterItemDisplayRuleSet rules = new BetterAPI.Items.CharacterItemDisplayRuleSet();
+            BetterAPI.ItemDisplays.CharacterItemDisplayRuleSet rules = new BetterAPI.ItemDisplays.CharacterItemDisplayRuleSet();
             rules.AddDefaultRule(new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,
@@ -67,6 +67,17 @@ namespace MoreItems
             MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
             MoreItemsPlugin.Hooks.Add<EntityStates.Merc.Evis>( "FixedUpdate", Evis_FixedUpdate);
             MoreItemsPlugin.Hooks.Add<RoR2.Projectile.ProjectileSimple>( "Awake", ProjectileSimple_Awake );
+
+            MoreItemsPlugin.onAwake += MoreItemsPlugin_onAwake;
+        }
+
+        private static void MoreItemsPlugin_onAwake()
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                Physics.IgnoreLayerCollision(30, i, Physics.GetIgnoreLayerCollision(8, i));
+            }
+            Physics.IgnoreLayerCollision(30, 30, true);
         }
 
         private static void ProjectileSimple_Awake(Action<RoR2.Projectile.ProjectileSimple> orig, RoR2.Projectile.ProjectileSimple self)
@@ -74,7 +85,7 @@ namespace MoreItems
             orig(self);
             if (self.gameObject.name == "MageIceBombProjectile(Clone)")
             {
-                self.gameObject.layer = 21;
+                self.gameObject.layer = 30;
             }
         }
 

@@ -20,7 +20,7 @@ namespace MoreItems
         static ItemDef itemDef;
         static SerratedSpoon()
         {
-            var rules = new BetterAPI.Items.CharacterItemDisplayRuleSet();
+            var rules = new BetterAPI.ItemDisplays.CharacterItemDisplayRuleSet();
             rules.AddDefaultRule(new ItemDisplayRule
                 {
                     ruleType = ItemDisplayRuleType.ParentedPrefab,

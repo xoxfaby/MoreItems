@@ -26,6 +26,7 @@ namespace MoreItems
 
         public static void Add()
         {
+            
             MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
         }
 

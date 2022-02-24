@@ -2,16 +2,15 @@
 
 A simple mod that adds more items to the game, intended to be balanced and fit well into the vanilla game. 
 
-#### THIS MOD IS IN EARLY DEVELOPMENT AND MAY HAVE BUGS
-
-A lot of the assets in this mod are placeholder assets.
-I highly recommend that when using this mod ( or any mod ) you understand that bugs can happen.
 
 ## Support Me
 
 If you like what I'm doing, consider supporting me through GitHub Sponsors so I can keep doing it:
 
-https://github.com/sponsors/xoxfaby
+https://github.com/sponsors/xoxfaby (preferred)
+https://patreon.com/xoxfaby
+or directly through paypal:
+https://streamelements.com/xoxfaby/tip
 
 ## Items:
 
@@ -29,7 +28,6 @@ https://github.com/sponsors/xoxfaby
  - Serrated Spoon: Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.
 
 
-
 ## Help & Feedback
 
 If you need help or have suggestions, create an issue on github, join my discord or find me on the RoR2 Modding Discord 
@@ -39,6 +37,11 @@ If you need help or have suggestions, create an issue on github, join my discord
 https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
+
+
+#### v2.1.5
+ - Fixes for BetterAPI v2.0.0
+ - Just some internal changes
 
 #### v2.1.4
  - Internal: Remove MMHook dependency, this should improve performance.
