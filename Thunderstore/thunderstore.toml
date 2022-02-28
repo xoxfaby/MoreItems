@@ -11,6 +11,7 @@ containsNsfwContent = false
 
 [package.dependencies]
 bbepis-BepInExPack = "5.4.9"
+XoXFaby-BetterAPI = "2.0.0"
 
 [build]
 icon = "./icon.png"
