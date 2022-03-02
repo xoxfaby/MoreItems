@@ -31,7 +31,8 @@ namespace MoreItems
         {
 
             MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
-            MoreItemsPlugin.Hooks.Add<RoR2.CharacterBody>( "RecalculateStats", CharacterBody_RecalculateStats );
+
+            BetterAPI.Stats.CriticalChance.collectBonuses += CriticalChance_collectBonuses;
 
 
 
@@ -46,17 +47,17 @@ namespace MoreItems
             BetterAPI.Buffs.Add(buffDef);
         }
 
-        static void CharacterBody_RecalculateStats(Action<RoR2.CharacterBody> orig, CharacterBody self)
+        private static void CriticalChance_collectBonuses(CharacterBody characterBody, BetterAPI.Stats.Stat.StatBonusArgs e)
         {
-            orig(self);
-            if (self.inventory)
+            if (characterBody.inventory)
             {
-                if(self.inventory.GetItemCount(itemDef) > 0)
+                if (characterBody.inventory.GetItemCount(itemDef) > 0)
                 {
-                    self.crit += 5;
+                    e.FlatBonuses.Add(5f);
                 }
             }
         }
+
         static void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
         {
             if (damageInfo.attacker && damageInfo.attacker != self.gameObject)

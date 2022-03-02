@@ -26,21 +26,15 @@ namespace MoreItems
 
         public static void Add()
         {
-            
-            MoreItemsPlugin.Hooks.Add<RoR2.HealthComponent, DamageInfo>( "TakeDamage", HealthComponent_TakeDamage );
+            BetterAPI.Stats.CriticalDamage.collectBonuses += CriticalDamage_collectBonuses;
         }
 
-        static void HealthComponent_TakeDamage(Action<RoR2.HealthComponent, DamageInfo> orig, HealthComponent self, DamageInfo damageInfo)
+        private static void CriticalDamage_collectBonuses(CharacterBody characterBody, Stats.Stat.StatBonusArgs e)
         {
-            if (damageInfo.crit && damageInfo.attacker)
+            if (characterBody.master && characterBody.master.inventory)
             {
-                CharacterBody attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
-                if (attackerBody && attackerBody.master && attackerBody.master.inventory)
-                {
-                    damageInfo.damage *= (float) (1 + 0.1 * attackerBody.master.inventory.GetItemCount(itemDef));
-                }
+                e.FlatBonuses.Add(0.1f * characterBody.master.inventory.GetItemCount(itemDef));
             }
-            orig(self, damageInfo);
         }
     }
 }
