@@ -30,7 +30,7 @@ namespace MoreItems
 
             var expansionDef = ScriptableObject.CreateInstance<RoR2.ExpansionManagement.ExpansionDef>();
             expansionDef.nameToken = "MoreItems";
-            expansionDef.descriptionToken = "Adds Items and Equipments from the 'MoreItems' mod ot the game.";
+            expansionDef.descriptionToken = "Adds Items and Equipments from the 'MoreItems' mod to the game.";
             expansionDef.iconSprite = bundle.LoadAsset<Sprite>($"Assets/Icons/expansion_icon.png");
             expansionDef.disabledIconSprite = RoR2.LegacyResourcesAPI.Load<Sprite>("Textures/MiscIcons/texUnlockIcon");
             expansionDef.requiredEntitlement = null;
