@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<LangVersion>preview</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
@@ -47,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BepInEx.Core" Version="5.4.9" />
-    <PackageReference Include="BetterUnityPlugin" Version="1.0.0" />
+    <PackageReference Include="BetterUnityPlugin" Version="1.1.0" />
     <PackageReference Include="RiskOfRain2" Version="1.0.6" />
     <PackageReference Include="RoR2-BetterAPI" Version="4.0.2" />
 	<PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
