@@ -41,6 +41,12 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+
+#### v2.2.1
+ - Bugfixes:
+   - Removed debug code that was causing only Drone Recycler to spawn
+   - Fixed typo in expansion description
+
 ### v2.2.0
  - Added Drone Scrapper
  - Created an Expansion for MoreItems to toggle all content added by MoreItems (Yes, this will come to BetterAPI soon. )
