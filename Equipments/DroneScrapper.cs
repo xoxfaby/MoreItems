@@ -36,7 +36,6 @@ namespace MoreItems
         {
             MoreItemsPlugin.Hooks.Add<RoR2.EquipmentSlot>("PerformEquipmentAction", EquipmentSlot_PerformEquipmentAction);
             MoreItemsPlugin.Hooks.Add<RoR2.EquipmentSlot>("UpdateTargets", EquipmentSlot_UpdateTargets);
-            Run.onRunStartGlobal += Run_onRunStartGlobal;
             MoreItemsPlugin.onStart += MoreItemsPlugin_onStart;
         }
 
@@ -45,10 +44,6 @@ namespace MoreItems
             equipmentDef.pickupIconSprite = MoreItemsPlugin.GeneratePlaceholderSprite("Drone\nScrapper");
         }
 
-        private static void Run_onRunStartGlobal(Run obj)
-        {
-            obj.availableEquipmentDropList = new List<PickupIndex>() { PickupCatalog.FindPickupIndex(equipmentDef.equipmentIndex) };
-        }
 
         public struct DroneSearchSelector : IGenericWorldSearchSelector<PurchaseInteraction>
         {
