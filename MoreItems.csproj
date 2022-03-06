@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Unity\Library\com.unity.addressables\aa\Windows\StandaloneWindows64\itemasset_assets_all_d50ce8c9157e6c15689308d2fb2da27f.bundle" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Unity\Assets\AssetBundles\itemasset" />
   </ItemGroup>
 
@@ -45,7 +49,7 @@
     <PackageReference Include="BepInEx.Core" Version="5.4.9" />
     <PackageReference Include="BetterUnityPlugin" Version="1.0.0" />
     <PackageReference Include="RiskOfRain2" Version="1.0.6" />
-    <PackageReference Include="RoR2-BetterAPI" Version="3.0.0" />
+    <PackageReference Include="RoR2-BetterAPI" Version="4.0.2" />
 	<PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
   </ItemGroup>
 

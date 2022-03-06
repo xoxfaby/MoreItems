@@ -27,6 +27,9 @@ https://streamelements.com/xoxfaby/tip
  - Cracked Orb: You have an extra chance to duplicate your attacks, but an equal chance to duplicate attacks that hit you.
  - Serrated Spoon: Your critical chance is always low, but your critical strikes get more damage from effects that add critical chance.
 
+## Equipments:
+ - Drone Scrapper: Disassemble a drone or turret to recieve scrap.
+
 
 ## Help & Feedback
 
@@ -38,6 +41,12 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+### v2.2.0
+ - Added Drone Scrapper
+ - Created an Expansion for MoreItems to toggle all content added by MoreItems (Yes, this will come to BetterAPI soon. )
+
+#### v2.1.11
+ - Moved Stat changes to BetterAPI Stats API.
 
 #### v2.1.5
  - Fixes for BetterAPI v2.0.0

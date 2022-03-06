@@ -277,12 +277,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="Markdig.Signed">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/PackageCache/com.passivepicasso.thunderkit@77cc00d5d0/Editor/ThirdParty/MarkDig/Markdig.Signed.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/PackageCache/com.passivepicasso.thunderkit@77cc00d5d0/Editor/ThirdParty/SharpCompress/SharpCompress.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
@@ -658,8 +652,14 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.CacheServer">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEditor.CacheServer.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Monetization">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
@@ -669,9 +669,6 @@
     </Reference>
     <Reference Include="UnityEngine.Purchasing.Stores">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.Purchasing.Stores.dll</HintPath>
-    </Reference>
-    <Reference Include="ThunderKit.Thunderstore">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/ThunderKit.Thunderstore.dll</HintPath>
     </Reference>
     <Reference Include="Purchasing.Common">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Purchasing.Common.dll</HintPath>
@@ -688,14 +685,17 @@
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.ResourceManager.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="ThunderKit.Markdown">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/ThunderKit.Markdown.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables.Editor">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.Addressables.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.Codeless">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.Purchasing.Codeless.dll</HintPath>
@@ -721,9 +721,6 @@
     <Reference Include="Unity.2D.Tilemap.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="ThunderKit.Core">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/ThunderKit.Core.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
     </Reference>
@@ -733,6 +730,12 @@
     <Reference Include="UnityEngine.Advertisements.Editor">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -741,9 +744,6 @@
     </Reference>
     <Reference Include="UnityEditor.XR.LegacyInputHelpers">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
-    </Reference>
-    <Reference Include="ThunderKit.Common">
-      <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/ThunderKit.Common.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.SecurityStub">
       <HintPath>D:/Projects/ror2/MoreItems/Unity/Library/ScriptAssemblies/UnityEngine.Purchasing.SecurityStub.dll</HintPath>
