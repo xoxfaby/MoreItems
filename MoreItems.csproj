@@ -22,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Unity\Library\com.unity.addressables\aa\Windows\StandaloneWindows64\itemasset_assets_all_d50ce8c9157e6c15689308d2fb2da27f.bundle" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Unity\Assets\AssetBundles\itemasset" />
   </ItemGroup>
 
