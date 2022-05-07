@@ -41,6 +41,8 @@ https://github.com/xoxfaby/MoreItems
 
 Additionally, if you want to help make this mod look better and know how to do 3d modelling, please get in contact with me!
 
+#### v2.2.2
+ - Bugfix: Fixed Drone Scrapper
 
 #### v2.2.1
  - Bugfixes:
