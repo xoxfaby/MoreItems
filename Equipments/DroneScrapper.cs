@@ -166,8 +166,13 @@ namespace MoreItems
                         new Vector3(UnityEngine.Random.Range(-4f, 4f), 20f, UnityEngine.Random.Range(-4f, 4f))
                     );
                     UnityEngine.GameObject.Destroy(target.gameObject);
+
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             return orig(self, equipmentDef);
         }
