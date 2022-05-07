@@ -9,12 +9,14 @@ using Mono.Cecil.Cil;
 using RoR2;
 using RoR2.DirectionalSearch;
 using UnityEngine;
+using System.Linq;
 
 namespace MoreItems
 {
-    internal static class DroneScrapper
+    public static class DroneScrapper
     {
-        static EquipmentDef equipmentDef;
+        public static readonly Dictionary<String, ItemDef> DroneScrapMap = new Dictionary<String, ItemDef>();
+        public static EquipmentDef equipmentDef;
         static DroneScrapper()
         {
             
@@ -37,6 +39,17 @@ namespace MoreItems
             MoreItemsPlugin.Hooks.Add<RoR2.EquipmentSlot>("PerformEquipmentAction", EquipmentSlot_PerformEquipmentAction);
             MoreItemsPlugin.Hooks.Add<RoR2.EquipmentSlot>("UpdateTargets", EquipmentSlot_UpdateTargets);
             MoreItemsPlugin.onStart += MoreItemsPlugin_onStart;
+            RoR2.ItemCatalog.availability.CallWhenAvailable(() =>
+            {
+                DroneScrapMap["TURRET1_CONTEXT"] = RoR2.RoR2Content.Items.ScrapWhite;
+                DroneScrapMap["DRONE_GUNNER_CONTEXT"] = RoR2.RoR2Content.Items.ScrapWhite;
+                DroneScrapMap["DRONE_HEALING_CONTEXT"] = RoR2.RoR2Content.Items.ScrapWhite;
+                DroneScrapMap["DRONE_MISSILE_CONTEXT"] = RoR2.RoR2Content.Items.ScrapGreen;
+                DroneScrapMap["FLAMEDRONE_CONTEXT"] = RoR2.RoR2Content.Items.ScrapGreen;
+                DroneScrapMap["EQUIPMENTDRONE_CONTEXT"] = RoR2.RoR2Content.Items.ScrapGreen;
+                DroneScrapMap["EMERGENCYDRONE_CONTEXT"] = RoR2.RoR2Content.Items.ScrapGreen;
+                DroneScrapMap["DRONE_MEGA_CONTEXT"] = RoR2.RoR2Content.Items.ScrapRed;
+            });
         }
 
         private static void MoreItemsPlugin_onStart()
@@ -104,17 +117,7 @@ namespace MoreItems
             DroneSearch search;
             if (!table.TryGetValue(slot, out search))
             {
-                search = new DroneSearch(new List<string>
-                {
-                    "TURRET1_CONTEXT",
-                    "FLAMEDRONE_CONTEXT",
-                    "DRONE_GUNNER_CONTEXT",
-                    "DRONE_MISSILE_CONTEXT",
-                    "DRONE_HEALING_CONTEXT",
-                    "EQUIPMENTDRONE_CONTEXT",
-                    "EMERGENCYDRONE_CONTEXT",
-                    "DRONE_MEGA_CONTEXT",
-                });
+                search = new DroneSearch(DroneScrapMap.Keys.ToList());
             }
             float num;
             aimRay = CameraRigController.ModifyAimRayIfApplicable(aimRay, slot.gameObject, out num);
@@ -138,18 +141,6 @@ namespace MoreItems
             slot.targetIndicator.targetTransform = (result ? slot.currentTarget.transformToIndicateAt : null);
             return result;
         }
-
-        static Dictionary<String, ItemDef> DroneScrapMap = new Dictionary<String, ItemDef>()
-        {
-            { "TURRET1_CONTEXT", RoR2.RoR2Content.Items.ScrapWhite },
-            { "DRONE_GUNNER_CONTEXT", RoR2.RoR2Content.Items.ScrapWhite },
-            { "DRONE_HEALING_CONTEXT", RoR2.RoR2Content.Items.ScrapWhite },
-            { "DRONE_MISSILE_CONTEXT", RoR2.RoR2Content.Items.ScrapGreen },
-            { "FLAMEDRONE_CONTEXT", RoR2.RoR2Content.Items.ScrapGreen },
-            { "EQUIPMENTDRONE_CONTEXT", RoR2.RoR2Content.Items.ScrapGreen },
-            { "EMERGENCYDRONE_CONTEXT", RoR2.RoR2Content.Items.ScrapGreen },
-            { "DRONE_MEGA_CONTEXT", RoR2.RoR2Content.Items.ScrapRed }
-        };
 
         static bool EquipmentSlot_PerformEquipmentAction(Func<RoR2.EquipmentSlot, RoR2.EquipmentDef, bool> orig, EquipmentSlot self, RoR2.EquipmentDef equipmentDef)
         {
